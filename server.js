@@ -2,9 +2,24 @@ import express from "express";
 import cors from "cors";
 import { Pool } from "pg";
 import dotenv from "dotenv";
+import helmet from "helmet";
 
 dotenv.config();
 const app = express();
+
+// Configure CSP
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://api.trustedform.com"],
+      imgSrc: ["'self'", "https://api.trustedform.com"],
+      connectSrc: ["'self'", "https://api.trustedform.com"],
+      styleSrc: ["'self'", "'unsafe-inline'"], // allow inline styles if needed
+    },
+  })
+);
+
 
 // ✅ Configure CORS properly
 app.use(cors({
