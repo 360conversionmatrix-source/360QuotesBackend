@@ -157,7 +157,7 @@ app.post("/windowsDoors/submit", async (req, res) => {
         reason,
         zipcode,
         subscribe === "yes",
-        xxTrustedFormCertUrl || null
+        xxTrustedFormCertUrl
       ]
     );
     res.status(200).send("Form data saved with TrustedForm certificate!");
