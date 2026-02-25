@@ -1,0 +1,170 @@
+import express from "express";
+import cors from "cors";
+import { Pool } from "pg";
+import dotenv from "dotenv";
+
+dotenv.config();
+const app = express();
+
+// ✅ Configure CORS properly
+app.use(cors({
+  origin: [
+    "https://360holdingquotes.com",
+    "https://360-quotes-frontend.vercel.app"
+  ],
+  methods: ["GET", "POST"],
+  credentials: true
+}));
+
+app.use(express.json());
+
+// ✅ Connect to Neon Postgres
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }, // required for Neon
+});
+
+// ------------------- ROUTES -------------------
+
+// Health check route
+app.get("/api/health", (req, res) => {
+  res.json({ status: "Backend is running!" });
+});
+
+// Pest Control form submission
+app.post("/pestControl/submit", async (req, res) => {
+  const {
+    first_name, last_name, Address, City,
+    email, phone, reason, zipcode, subscribe,
+    xxTrustedFormCertUrl
+  } = req.body;
+
+  try {
+    await pool.query(
+      `INSERT INTO pest_control_leads 
+       (first_name, last_name, address, city, email, phone, reason, zipcode, subscribe, trusted_cert_url)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+      [
+        first_name,
+        last_name,
+        Address,
+        City,
+        email,
+        phone,
+        reason,
+        zipcode,
+        subscribe === "yes",
+        xxTrustedFormCertUrl || null
+      ]
+    );
+    res.status(200).send("Form data saved with TrustedForm certificate!");
+  } catch (err) {
+    console.error("DB Error:", err);
+    res.status(500).send("Error saving form data");
+  }
+});
+
+// Water Damage form submission
+app.post("/waterDamage/submit", async (req, res) => {
+  const {
+    first_name, last_name, Address, City,
+    email, phone, reason, zipcode, subscribe,
+    xxTrustedFormCertUrl
+  } = req.body;
+
+  try {
+    await pool.query(
+      `INSERT INTO Water_Damage_leads 
+       (first_name, last_name, address, city, email, phone, reason, zipcode, subscribe, trusted_cert_url)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+      [
+        first_name,
+        last_name,
+        Address,
+        City,
+        email,
+        phone,
+        reason,
+        zipcode,
+        subscribe === "yes",
+        xxTrustedFormCertUrl || null
+      ]
+    );
+    res.status(200).send("Form data saved with TrustedForm certificate!");
+  } catch (err) {
+    console.error("DB Error:", err);
+    res.status(500).send("Error saving form data");
+  }
+});
+
+// HVAC form submission
+app.post("/HVAC/submit", async (req, res) => {
+  const {
+    first_name, last_name, Address, City,
+    email, phone, reason, zipcode, subscribe,
+    xxTrustedFormCertUrl
+  } = req.body;
+
+  try {
+    await pool.query(
+      `INSERT INTO HVAC_leads 
+       (first_name, last_name, address, city, email, phone, reason, zipcode, subscribe, trusted_cert_url)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+      [
+        first_name,
+        last_name,
+        Address,
+        City,
+        email,
+        phone,
+        reason,
+        zipcode,
+        subscribe === "yes",
+        xxTrustedFormCertUrl || null
+      ]
+    );
+    res.status(200).send("Form data saved with TrustedForm certificate!");
+  } catch (err) {
+    console.error("DB Error:", err);
+    res.status(500).send("Error saving form data");
+  }
+});
+
+// Windows & Doors form submission
+app.post("/windowsDoors/submit", async (req, res) => {
+  const {
+    first_name, last_name, Address, City,
+    email, phone, reason, zipcode, subscribe,
+    xxTrustedFormCertUrl
+  } = req.body;
+
+  try {
+    await pool.query(
+      `INSERT INTO Window_repair_leads 
+       (first_name, last_name, address, city, email, phone, reason, zipcode, subscribe, trusted_cert_url)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+      [
+        first_name,
+        last_name,
+        Address,
+        City,
+        email,
+        phone,
+        reason,
+        zipcode,
+        subscribe === "yes",
+        xxTrustedFormCertUrl || null
+      ]
+    );
+    res.status(200).send("Form data saved with TrustedForm certificate!");
+  } catch (err) {
+    console.error("DB Error:", err);
+    res.status(500).send("Error saving form data");
+  }
+});
+
+// ------------------- SERVER -------------------
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
