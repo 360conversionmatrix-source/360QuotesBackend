@@ -33,6 +33,7 @@ app.get("/api/health", (req, res) => {
 
 // Pest Control form submission
 app.post("/pestControl/submit", async (req, res) => {
+  console.log("Incoming body:", req.body);
   const {
     first_name, last_name, Address, City,
     email, phone, reason, zipcode, subscribe,
@@ -66,6 +67,7 @@ app.post("/pestControl/submit", async (req, res) => {
 
 // Water Damage form submission
 app.post("/waterDamage/submit", async (req, res) => {
+  console.log("Incoming body:", req.body);
   const {
     first_name, last_name, Address, City,
     email, phone, reason, zipcode, subscribe,
@@ -99,6 +101,7 @@ app.post("/waterDamage/submit", async (req, res) => {
 
 // HVAC form submission
 app.post("/HVAC/submit", async (req, res) => {
+  console.log("Incoming body:", req.body);
   const {
     first_name, last_name, Address, City,
     email, phone, reason, zipcode, subscribe,
@@ -132,6 +135,7 @@ app.post("/HVAC/submit", async (req, res) => {
 
 // Windows & Doors form submission
 app.post("/windowsDoors/submit", async (req, res) => {
+  console.log("Incoming body:", req.body);
   const {
     first_name, last_name, Address, City,
     email, phone, reason, zipcode, subscribe,
