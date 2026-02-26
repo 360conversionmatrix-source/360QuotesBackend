@@ -27,6 +27,8 @@ app.use(cors({
     "https://360holdingquotes.com",
     "https://360-quotes-frontend.vercel.app",
     "https://360-quotes-frontend-3hcw.vercel.app/",
+    "www.360holdingquotes.com",
+    "http://localhost:3000",
   ],
   methods: ["GET", "POST"],
   credentials: true
