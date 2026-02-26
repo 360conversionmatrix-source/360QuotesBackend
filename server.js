@@ -25,7 +25,8 @@ app.use(
 app.use(cors({
   origin: [
     "https://360holdingquotes.com",
-    "https://360-quotes-frontend.vercel.app"
+    "https://360-quotes-frontend.vercel.app",
+    "https://360-quotes-frontend-3hcw.vercel.app/",
   ],
   methods: ["GET", "POST"],
   credentials: true
