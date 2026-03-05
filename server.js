@@ -84,7 +84,7 @@ app.post("/pestControl/submit", async (req, res) => {
 });
 
 // Water Damage form submission
-app.post("/waterDamage/submit", async (req, res) => {
+app.post("/Homeinsurance/submit", async (req, res) => {
   console.log("Incoming body:", req.body);
   const {
     first_name, last_name, Address, City,
@@ -94,7 +94,7 @@ app.post("/waterDamage/submit", async (req, res) => {
 
   try {
     await pool.query(
-      `INSERT INTO Water_Damage_leads 
+      `INSERT INTO Homeinsurance_leads 
        (first_name, last_name, address, city, email, phone, reason, zipcode, subscribe, trusted_cert_url)
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
       [
