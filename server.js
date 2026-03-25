@@ -29,6 +29,8 @@ app.use(cors({
     "https://360-quotes-frontend-3hcw.vercel.app/",
     "www.360holdingquotes.com",
     "http://localhost:3000",
+    'http://localhost:5173',
+    'https://360flightbooking.com/'
   ],
   methods: ["GET", "POST"],
   credentials: true
@@ -184,6 +186,40 @@ app.post("/windowsDoors/submit", async (req, res) => {
     res.status(500).send("Error saving form data");
   }
 });
+app.post("/planes/submit", async (req, res) => {
+  console.log("Incoming body:", req.body);
+  const {
+    first_name, last_name, Address, City,
+    email, phone, reason, zipcode, subscribe,
+    xxTrustedFormCertUrl
+  } = req.body;
+
+  try {
+    await pool.query(
+      `INSERT INTO flight_booking_leads 
+       (first_name, last_name, address, city, email, phone, reason, zipcode, subscribe, trusted_cert_url)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+      [
+        first_name,
+        last_name,
+        Address,
+        City,
+        email,
+        phone,
+        reason,
+        zipcode,
+        subscribe === "yes",
+        xxTrustedFormCertUrl || null
+      ]
+    );
+    res.status(200).send("Form data saved with TrustedForm certificate!");
+  } catch (err) {
+    console.error("DB Error:", err);
+    res.status(500).send("Error saving form data");
+  }
+});
+
+
 
 // ------------------- SERVER -------------------
 const PORT = process.env.PORT || 5000;
