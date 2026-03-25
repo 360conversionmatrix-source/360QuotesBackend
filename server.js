@@ -30,7 +30,10 @@ app.use(cors({
     "www.360holdingquotes.com",
     "http://localhost:3000",
     'http://localhost:5173',
-    'https://360flightbooking.com/'
+    'https://360flightbooking.com',
+    'https://360-flight-booking-frontend.vercel.app',
+    'https://360-flight-booking-frontend-3hcw.vercel.app',
+    "www.360flightbooking.com"
   ],
   methods: ["GET", "POST"],
   credentials: true
