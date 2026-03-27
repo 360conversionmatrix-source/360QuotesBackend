@@ -36,9 +36,11 @@ app.use(cors({
     "www.360flightbooking.com",
     "https://www.360holdingquotes.com/"
   ],
-  methods: ["GET", "POST"],
+  methods: ['GET','POST','PUT','DELETE'],
   credentials: true
 }));
+
+
 
 app.use(express.json());
 
