@@ -95,16 +95,24 @@ app.post("/pestControl/submit", async (req, res) => {
 app.post("/Homeinsurance/submit", async (req, res) => {
   console.log("Incoming body:", req.body);
   const {
-    first_name, last_name, Address, City,
-    email, phone, reason, zipcode, subscribe,
-    xxTrustedFormCertUrl
+    first_name, 
+    last_name, 
+    Address, 
+    City,
+    email, 
+    phone, 
+    reason, 
+    zipcode, 
+    subscribe,
+    xxTrustedFormCertUrl,
+    smid // Extracted from the request body
   } = req.body;
 
   try {
     await pool.query(
       `INSERT INTO Homeinsurance_leads 
-       (first_name, last_name, address, city, email, phone, reason, zipcode, subscribe, trusted_cert_url)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+       (first_name, last_name, address, city, email, phone, reason, zipcode, subscribe, trusted_cert_url, smid)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
       [
         first_name,
         last_name,
@@ -114,11 +122,13 @@ app.post("/Homeinsurance/submit", async (req, res) => {
         phone,
         reason,
         zipcode,
-        subscribe === "yes",
-        xxTrustedFormCertUrl || null
+        // React sends a boolean; this ensures it's stored correctly as a boolean
+        !!subscribe, 
+        xxTrustedFormCertUrl || null,
+        smid || null // Saved to the new smid column
       ]
     );
-    res.status(200).send("Form data saved with TrustedForm certificate!");
+    res.status(200).send("Form data saved with TrustedForm certificate and SMID!");
   } catch (err) {
     console.error("DB Error:", err);
     res.status(500).send("Error saving form data");
