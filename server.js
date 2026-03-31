@@ -61,16 +61,24 @@ app.get("/api/health", (req, res) => {
 app.post("/pestControl/submit", async (req, res) => {
   console.log("Incoming body:", req.body);
   const {
-    first_name, last_name, Address, City,
-    email, phone, reason, zipcode, subscribe,
-    xxTrustedFormCertUrl
+    first_name, 
+    last_name, 
+    Address, 
+    City,
+    email, 
+    phone, 
+    reason, 
+    zipcode, 
+    subscribe,
+    xxTrustedFormCertUrl,
+    smid // Destructured from the request body
   } = req.body;
 
   try {
     await pool.query(
       `INSERT INTO pest_control_leads 
-       (first_name, last_name, address, city, email, phone, reason, zipcode, subscribe, trusted_cert_url)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+        (first_name, last_name, address, city, email, phone, reason, zipcode, subscribe, trusted_cert_url, smid)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
       [
         first_name,
         last_name,
@@ -80,11 +88,13 @@ app.post("/pestControl/submit", async (req, res) => {
         phone,
         reason,
         zipcode,
-        subscribe === "yes",
-        xxTrustedFormCertUrl || null
+        // Since React sends a boolean, this converts it to a proper SQL boolean
+        !!subscribe, 
+        xxTrustedFormCertUrl || null,
+        smid || null // Added to the parameter array
       ]
     );
-    res.status(200).send("Form data saved with TrustedForm certificate!");
+    res.status(200).send("Form data saved with TrustedForm certificate and SMID!");
   } catch (err) {
     console.error("DB Error:", err);
     res.status(500).send("Error saving form data");
@@ -237,16 +247,24 @@ app.post("/planes/submit", async (req, res) => {
 app.post("/autoinsurance/submit", async (req, res) => {
   console.log("Incoming body:", req.body);
   const {
-    first_name, last_name, Address, City,
-    email, phone, reason, zipcode, subscribe,
-    xxTrustedFormCertUrl
+    first_name, 
+    last_name, 
+    Address, 
+    City,
+    email, 
+    phone, 
+    reason, 
+    zipcode, 
+    subscribe,
+    xxTrustedFormCertUrl,
+    smid // Extracted from the request body
   } = req.body;
 
   try {
     await pool.query(
       `INSERT INTO auto_insurance_leads 
-       (first_name, last_name, address, city, email, phone, reason, zipcode, subscribe, trusted_cert_url)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+        (first_name, last_name, address, city, email, phone, reason, zipcode, subscribe, trusted_cert_url, smid)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
       [
         first_name,
         last_name,
@@ -256,17 +274,60 @@ app.post("/autoinsurance/submit", async (req, res) => {
         phone,
         reason,
         zipcode,
-        subscribe === "yes",
-        xxTrustedFormCertUrl || null
+        // React sends a boolean; this ensures it is stored as a proper SQL boolean
+        !!subscribe, 
+        xxTrustedFormCertUrl || null,
+        smid || null // Added to the parameter array
       ]
     );
-    res.status(200).send("Form data saved with TrustedForm certificate!");
+    res.status(200).send("Form data saved with TrustedForm certificate and SMID!");
   } catch (err) {
     console.error("DB Error:", err);
     res.status(500).send("Error saving form data");
   }
 });
+app.post("/medicare/submit", async (req, res) => {
+  console.log("Incoming body:", req.body);
+  const {
+    first_name, 
+    last_name, 
+    Address, 
+    City,
+    email, 
+    phone, 
+    reason, 
+    zipcode, 
+    subscribe,
+    xxTrustedFormCertUrl,
+    smid // Extracted from the request body
+  } = req.body;
 
+  try {
+    await pool.query(
+      `INSERT INTO medicare_leads 
+        (first_name, last_name, address, city, email, phone, reason, zipcode, subscribe, trusted_cert_url, smid)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+      [
+        first_name,
+        last_name,
+        Address,
+        City,
+        email,
+        phone,
+        reason,
+        zipcode,
+        // React sends a boolean; this ensures it is stored as a proper SQL boolean
+        !!subscribe, 
+        xxTrustedFormCertUrl || null,
+        smid || null // Added to the parameter array
+      ]
+    );
+    res.status(200).send("Form data saved with TrustedForm certificate and SMID!");
+  } catch (err) {
+    console.error("DB Error:", err);
+    res.status(500).send("Error saving form data");
+  }
+});
 
 
 // ------------------- SERVER -------------------
