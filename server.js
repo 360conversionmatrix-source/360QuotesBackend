@@ -34,7 +34,9 @@ app.use(cors({
     'https://360-flight-booking-frontend.vercel.app',
     'https://360-flight-booking-frontend-3hcw.vercel.app',
     "www.360flightbooking.com",
-    "https://www.360holdingquotes.com"
+    "https://www.360holdingquotes.com",
+    "https://www.conversionmatrix360.org",
+    "https://conversionmatrix360.org",
   ],
   methods: ['GET','POST','PUT','DELETE'],
   credentials: true
@@ -370,7 +372,73 @@ app.post("/FinalExpence/submit", async (req, res) => {
     res.status(500).send("Error saving form data");
   }
 });
+app.post("/Services/submit", async (req, res) => {
+  console.log("Incoming body:", req.body);
+  const {
+    first_name, 
+    last_name, 
+    Company, 
+    Website,
+    email, 
+    phone, 
+    Service, 
+    description
+  } = req.body;
 
+  try {
+    await pool.query(
+      `INSERT INTO Services_leads 
+        (first_name, last_name, company, website, email, phone, service, description)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [
+       first_name, 
+       last_name, 
+       Company, 
+       Website,
+       email, 
+       phone, 
+       Service, 
+       description
+      ]
+    );
+    res.status(200).send("Form data saved");
+  } catch (err) {
+    console.error("DB Error:", err);
+    res.status(500).send("Error saving form data");
+  }
+});
+
+app.post("/Contact/submit", async (req, res) => {
+  console.log("Incoming body:", req.body);
+  const {
+    first_name, 
+    last_name,
+    email, 
+    phone, 
+    Service, 
+    description
+  } = req.body;
+
+  try {
+    await pool.query(
+      `INSERT INTO Contact_leads 
+        (first_name, last_name, email, phone, service, description)
+        VALUES ($1, $2, $3, $4, $5, $6)`,
+      [
+       first_name, 
+       last_name, 
+       email, 
+       phone, 
+       Service, 
+       description
+      ]
+    );
+    res.status(200).send("Form data saved");
+  } catch (err) {
+    console.error("DB Error:", err);
+    res.status(500).send("Error saving form data");
+  }
+});
 
 // ------------------- SERVER -------------------
 const PORT = process.env.PORT || 5000;
