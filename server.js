@@ -37,6 +37,9 @@ app.use(cors({
     "https://www.360holdingquotes.com",
     "https://www.conversionmatrix360.org",
     "https://conversionmatrix360.org",
+    "https://www.ucpmquotes.com/",
+    "https://ucpmquotes.com/",
+    "https://www.ucpmquotes.com",
   ],
   methods: ['GET','POST','PUT','DELETE'],
   credentials: true
@@ -434,6 +437,49 @@ app.post("/Contact/submit", async (req, res) => {
       ]
     );
     res.status(200).send("Form data saved");
+  } catch (err) {
+    console.error("DB Error:", err);
+    res.status(500).send("Error saving form data");
+  }
+});
+
+app.post("/ACA/submit", async (req, res) => {
+  console.log("Incoming body:", req.body);
+  const {
+    first_name, 
+    last_name, 
+    Address, 
+    City,
+    email, 
+    phone, 
+    reason, 
+    zipcode, 
+    subscribe,
+    xxTrustedFormCertUrl,
+    smid // Destructured from the request body
+  } = req.body;
+
+  try {
+    await pool.query(
+      `INSERT INTO ACA_leads 
+        (first_name, last_name, address, city, email, phone, reason, zipcode, subscribe, trusted_cert_url, smid)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+      [
+        first_name,
+        last_name,
+        Address,
+        City,
+        email,
+        phone,
+        reason,
+        zipcode,
+        // Since React sends a boolean, this converts it to a proper SQL boolean
+        !!subscribe, 
+        xxTrustedFormCertUrl || null,
+        smid || null // Added to the parameter array
+      ]
+    );
+    res.status(200).send("Form data saved with TrustedForm certificate and SMID!");
   } catch (err) {
     console.error("DB Error:", err);
     res.status(500).send("Error saving form data");
